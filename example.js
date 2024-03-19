@@ -5,7 +5,7 @@ import { generatePrivateKey, privateKeyToAccount } from 'viem/accounts';
 import { sepolia } from 'viem/chains';
 import { gzipSync } from 'fflate';
 
-const CONTENT = 'data:,hey world! this is a blob';
+const CONTENT = 'data:,hey world! this is a blob; follow for more: https://twitter.com/wgw_eth';
 const OWNER = '0xA20C07F94A127fD76E61fbeA1019cCe759225002';
 const CREATOR_PRIV_KEY = '0x0d52ccde318a676a9b896ae742419325bf174bc94680c45314bb4be3021a8141';
 
@@ -30,8 +30,8 @@ await inscribeBlob({
   creatorPrivateKey: `0x74e344495a3e814a8f3a66a93d431f0c1d5dd55ba4b889c20683ae4be678fbc6`,
   initialOwnerAddress: OWNER,
   chainId: 1,
-  maxGasFeePerGas: 10,
-  rpcUrl: 'https://go.getblock.io/aff1df41020b467e92be9b041452bc24',
+  maxGasFeePerGas: 20,
+  rpcUrl: 'https://go.getblock.io/cc615130d7f84537b0940e7e5870594f',
 });
 
 async function createBlob(content) {
@@ -47,10 +47,9 @@ async function createBlob(content) {
 }
 
 async function inscribeBlob(opts) {
-  const creatorPrivateKey = privKey || generatePrivateKey();
-  const account = privateKeyToAccount(creatorPrivateKey);
+  const account = privateKeyToAccount(opts.creatorPrivateKey || generatePrivateKey());
 
-  console.log({ ...account, privateKey: creatorPrivateKey });
+  console.log({ ...opts, ...account });
 
   const resp = await fetch(`${API_URL}/api/inscribe-blob`, {
     method: 'POST',
