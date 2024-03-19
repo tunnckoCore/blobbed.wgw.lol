@@ -22,13 +22,14 @@ export const POST: APIRoute = async ({ request }) => {
   const transport = http(rpcUrl || `https://go.getblock.io/08ddc0f364494878a7ad8975770fb9c1`);
 
   const privateKey = creatorPrivateKey || generatePrivateKey();
-  const account = privateKeyToAccount(privateKey as `0x${string}`);
+  const account = privateKeyToAccount(`0x${privateKey.replace(/^0x/i, '')}` as `0x${string}`);
 
   const client = createPublicClient({ chain, transport });
   const wallet = createWalletClient({ account, chain, transport });
 
   const calldata = await handleCalldata(customCalldataUri);
   const { maxFeePerGas, maxPriorityFeePerGas } = await client.estimateFeesPerGas();
+  const gasPerBlob = typeof maxFeePerBlobGas === 'number' ? String(maxFeePerBlobGas) : maxFeePerBlobGas;
 
   const req = await wallet.prepareTransactionRequest({
     kzg,
@@ -36,7 +37,7 @@ export const POST: APIRoute = async ({ request }) => {
     account,
     maxFeePerGas,
     maxPriorityFeePerGas,
-    maxFeePerBlobGas: parseGwei(maxFeePerBlobGas || '100'),
+    maxFeePerBlobGas: parseGwei(gasPerBlob || '100'),
     to: initialOwnerAddress,
     type: 'eip4844',
     value: 0n,

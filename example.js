@@ -23,11 +23,22 @@ const CREATOR_PRIV_KEY = '0x0d52ccde318a676a9b896ae742419325bf174bc94680c45314bb
 
 const API_URL = `https://astro-tidal-cycle.vercel.app`;
 
-async function createBlob(content, owner) {
+const blobs = await createBlob(CONTENT);
+
+await inscribeBlob({
+  blobs,
+  creatorPrivateKey: `0x74e344495a3e814a8f3a66a93d431f0c1d5dd55ba4b889c20683ae4be678fbc6`,
+  initialOwnerAddress: OWNER,
+  chainId: 1,
+  maxGasFeePerGas: 10,
+  rpcUrl: 'https://go.getblock.io/aff1df41020b467e92be9b041452bc24',
+});
+
+async function createBlob(content) {
   const { blobs, versionedHashes } = await fetch(`${API_URL}/api/create-blob`, {
     method: 'POST',
     headers: { 'content-type': 'application/json' },
-    body: JSON.stringify({ content, initialOwnerAddress: owner }),
+    body: JSON.stringify({ content }),
   }).then((x) => x.json());
 
   console.log({ versionedHashes });
@@ -35,11 +46,7 @@ async function createBlob(content, owner) {
   return blobs;
 }
 
-// const blobs = await createBlob(CONTENT, OWNER);
-
-// await inscribeBlob(blobs, CREATOR_PRIV_KEY);
-
-async function inscribeBlob(blobs, privKey) {
+async function inscribeBlob(opts) {
   const creatorPrivateKey = privKey || generatePrivateKey();
   const account = privateKeyToAccount(creatorPrivateKey);
 
@@ -48,11 +55,7 @@ async function inscribeBlob(blobs, privKey) {
   const resp = await fetch(`${API_URL}/api/inscribe-blob`, {
     method: 'POST',
     headers: { 'content-type': 'application/json' },
-    body: JSON.stringify({
-      blobs,
-      creatorPrivateKey,
-      initialOwnerAddress: '0xA20C07F94A127fD76E61fbeA1019cCe759225002',
-    }),
+    body: JSON.stringify({ ...opts }),
   }).then((x) => x.json());
 
   console.log(resp);
