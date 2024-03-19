@@ -21,12 +21,10 @@ const CREATOR_PRIV_KEY = '0x0d52ccde318a676a9b896ae742419325bf174bc94680c45314bb
 
 // console.log({ u8bytes });
 
-const API_URL = `https://astro-tidal-cycle.vercel.app`;
-
-const blobs = await createBlob(CONTENT);
+const API_URL = `https://blobbed.wgw.lol`;
 
 await inscribeBlob({
-  blobs,
+  blobs: await createBlob(CONTENT),
   creatorPrivateKey: `0x74e344495a3e814a8f3a66a93d431f0c1d5dd55ba4b889c20683ae4be678fbc6`,
   initialOwnerAddress: OWNER,
   chainId: 1,
@@ -35,7 +33,7 @@ await inscribeBlob({
 });
 
 async function createBlob(content) {
-  const { blobs, versionedHashes } = await fetch(`${API_URL}/api/create-blob`, {
+  const { blobs, versionedHashes } = await fetch(`${API_URL.replace(/\/$/, '')}/api/create-blob`, {
     method: 'POST',
     headers: { 'content-type': 'application/json' },
     body: JSON.stringify({ content }),
@@ -51,7 +49,7 @@ async function inscribeBlob(opts) {
 
   console.log({ ...opts, ...account });
 
-  const resp = await fetch(`${API_URL}/api/inscribe-blob`, {
+  const resp = await fetch(`${API_URL.replace(/\/$/, '')}/api/inscribe-blob`, {
     method: 'POST',
     headers: { 'content-type': 'application/json' },
     body: JSON.stringify({ ...opts }),
