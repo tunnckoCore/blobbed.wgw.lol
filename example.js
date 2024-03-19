@@ -5,30 +5,19 @@ import { generatePrivateKey, privateKeyToAccount } from 'viem/accounts';
 import { sepolia } from 'viem/chains';
 import { gzipSync } from 'fflate';
 
-const CONTENT = 'data:,hey world! this is a blob; follow for more: https://twitter.com/wgw_eth';
 const OWNER = '0xA20C07F94A127fD76E61fbeA1019cCe759225002';
-const CREATOR_PRIV_KEY = '0x0d52ccde318a676a9b896ae742419325bf174bc94680c45314bb4be3021a8141';
+const CREATOR_PRIV_KEY = '0x...';
 
-// const bunfile = await Bun.file('./image.webp');
-// const file = new File([new Uint8Array(await bunfile.arrayBuffer())], './some-img.webp', { type: 'image/webp' });
-// const arrBuf = await file.arrayBuffer();
-// const u8bytes = new Uint8Array(arrBuf);
-// const content = bytesToHex(u8bytes);
+// const API_URL = `https://blobbed.wgw.lol`;
 
-// const formData = new FormData();
-// formData.append('blob');
-// formData.append('initialOwnerAddress', '0xA20C07F94A127fD76E61fbeA1019cCe759225002');
-
-// console.log({ u8bytes });
-
-const API_URL = `https://blobbed.wgw.lol`;
+const API_URL = `http://localhost:4321`;
+const CONTENT = 'data:,hey world! this is a blob; follow for more: https://twitter.com/wgw_eth';
 
 await inscribeBlob({
   blobs: await createBlob(CONTENT),
-  creatorPrivateKey: `0x74e344495a3e814a8f3a66a93d431f0c1d5dd55ba4b889c20683ae4be678fbc6`,
   initialOwnerAddress: OWNER,
   chainId: 1,
-  maxGasFeePerGas: 20,
+  maxGasFeePerGas: 5,
   rpcUrl: 'https://go.getblock.io/cc615130d7f84537b0940e7e5870594f',
 });
 
@@ -45,7 +34,8 @@ async function createBlob(content) {
 }
 
 async function inscribeBlob(opts) {
-  const account = privateKeyToAccount(opts.creatorPrivateKey || generatePrivateKey());
+  const privkey = `0x${(opts.creatorPrivateKey || generatePrivateKey()).replace(/0x/i, '')}`;
+  const account = privateKeyToAccount(privkey);
 
   console.log({ ...opts, ...account });
 
