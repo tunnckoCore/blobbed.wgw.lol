@@ -1,13 +1,13 @@
 {
   "name": "tidal-cycle",
-  "type": "module",
   "version": "0.0.1",
+  "type": "module",
   "scripts": {
-    "dev": "astro dev",
-    "start": "astro dev",
+    "astro": "astro",
     "build": "astro check && astro build",
+    "dev": "astro dev",
     "preview": "astro preview",
-    "astro": "astro"
+    "start": "astro dev"
   },
   "dependencies": {
     "@astrojs/check": "^0.5.9",
@@ -16,9 +16,11 @@
     "cbor": "^9.0.2",
     "cbor-x": "^1.5.8",
     "dotenv": "^16.4.5",
+    "fflate": "^0.8.2",
     "formidable-mini": "^0.2.1",
     "kzg-wasm": "^0.3.1",
     "typescript": "^5.4.2",
     "viem": "^2.8.12"
-  }
+  },
+  "devDependencies": {}
 }

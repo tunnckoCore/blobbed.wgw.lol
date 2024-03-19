@@ -1,25 +1,11 @@
 import { loadKZG } from 'kzg-wasm';
 import { generatePrivateKey, privateKeyToAccount } from 'viem/accounts';
-import {
-  // blobsToCommitments,
-  bytesToHex,
-  createPublicClient,
-  createWalletClient,
-  extractChain,
-  fallback,
-  http,
-  parseGwei,
-  // sha256,
-  // stringToBytes,
-  // toBlobs,
-} from 'viem';
+import { bytesToHex, createPublicClient, createWalletClient, extractChain, http, parseGwei } from 'viem';
 import * as chains from 'viem/chains';
 import type { APIRoute } from 'astro';
-// import { formidable } from 'formidable-mini';
-// import { encode as encodeCbor } from 'cbor-x';
 
 export const POST: APIRoute = async ({ request }) => {
-  const { initialOwnerAddress, chainId, customCalldataUri, blobs, creatorPrivateKey, maxFeePerBlobGas } =
+  const { initialOwnerAddress, chainId, customCalldataUri, rpcUrl, blobs, creatorPrivateKey, maxFeePerBlobGas } =
     await request.json();
 
   if (!initialOwnerAddress || !blobs) {
@@ -33,7 +19,7 @@ export const POST: APIRoute = async ({ request }) => {
     chains: Object.values(chains),
   });
 
-  const transport = fallback([http(`https://go.getblock.io/08ddc0f364494878a7ad8975770fb9c1`)]);
+  const transport = http(rpcUrl || `https://go.getblock.io/08ddc0f364494878a7ad8975770fb9c1`);
 
   const privateKey = creatorPrivateKey || generatePrivateKey();
   const account = privateKeyToAccount(privateKey as `0x${string}`);

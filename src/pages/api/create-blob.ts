@@ -1,9 +1,10 @@
 import { loadKZG } from 'kzg-wasm';
 import { blobsToCommitments, bytesToHex, sha256, toBlobs } from 'viem';
 import type { APIRoute } from 'astro';
+// import { encode as encodeCbor } from 'cbor-x';
 
 export const POST: APIRoute = async ({ request }) => {
-  const { content } = await request.json();
+  const { content /* , mimetype = '' */ } = await request.json();
   if (!content) {
     return new Response(JSON.stringify({ error: 'content is required' }), { status: 400 });
   }
