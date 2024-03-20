@@ -18,9 +18,9 @@
     "dotenv": "^16.4.5",
     "fflate": "^0.8.2",
     "formidable-mini": "^0.2.1",
+    "imagemin-webp": "^8.0.0",
     "kzg-wasm": "^0.3.1",
     "typescript": "^5.4.2",
     "viem": "^2.8.12"
-  },
-  "devDependencies": {}
+  }
 }
