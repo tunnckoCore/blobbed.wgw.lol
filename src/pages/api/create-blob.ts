@@ -1,6 +1,6 @@
 import { loadKZG } from 'kzg-wasm';
 import type { APIRoute } from 'astro';
-import { blobsToCommitments, bytesToHex, sha256, toBlobs } from '../../../viem';
+import { blobsToCommitments, bytesToHex, sha256, toBlobs } from 'viem';
 // import { encode as encodeCbor } from 'cbor-x';
 
 export const POST: APIRoute = async ({ request }) => {
